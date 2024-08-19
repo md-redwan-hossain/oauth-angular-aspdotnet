@@ -1,0 +1,45 @@
+services:
+    postgres_db:
+        image: bitnami/postgresql:16.3.0
+        restart: unless-stopped
+        environment:
+            POSTGRESQL_DATABASE: ${DB_NAME}
+            POSTGRESQL_USERNAME: ${DB_USER}
+            POSTGRES_PASSWORD: ${DB_PASSWORD}
+            POSTGRESQL_TIMEZONE: "Asia/Dhaka"
+
+        healthcheck:
+            test:
+                ["CMD-SHELL", "sh -c 'pg_isready -U ${DB_USER} -d ${DB_NAME}'"]
+            interval: 10s
+            timeout: 5s
+            retries: 5
+
+        ports:
+            - "5436:5432"
+        volumes:
+            - "postgres_data:/bitnami/postgresql"
+
+    keycloak:
+        depends_on:
+            postgres_db:
+                condition: service_healthy
+        image: quay.io/keycloak/keycloak:25.0.2
+        command: start
+        environment:
+            KC_HOSTNAME: localhost
+            KC_HTTP_ENABLED: true
+            KC_HEALTH_ENABLED: true
+            KEYCLOAK_ADMIN: ${KEYCLOAK_ADMIN}
+            KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD}
+            KC_DB: postgres
+            KC_DB_URL_HOST: postgres_db
+            KC_DB_URL_PORT: 5432
+            KC_DB_URL_DATABASE: ${DB_NAME}
+            KC_DB_USERNAME: ${DB_USER}
+            KC_DB_PASSWORD: ${DB_PASSWORD}
+        ports:
+            - 8085:8080
+        restart: unless-stopped
+volumes:
+    postgres_data:
