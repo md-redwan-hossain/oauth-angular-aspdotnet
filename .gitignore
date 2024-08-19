@@ -13,7 +13,7 @@ riderModule.iml
 **/*.user
 **/Logs/*
 **/.idea
-
+**/.angular/cache
 # Logs
 logs
 *.log
