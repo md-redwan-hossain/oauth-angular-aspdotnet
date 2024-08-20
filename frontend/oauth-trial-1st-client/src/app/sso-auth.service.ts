@@ -14,7 +14,7 @@ export class SsoAuthService {
     this.oAuthService.configure(authConfig);
   }
 
-  async initializeLogIn(): Promise<void> {
+  async initializeLogIn() {
     await this.oAuthService.loadDiscoveryDocumentAndTryLogin();
     this.oAuthService.setupAutomaticSilentRefresh();
     if (!this.oAuthService.hasValidAccessToken()) {
@@ -38,14 +38,21 @@ export class SsoAuthService {
     this.$user.set(null);
   }
 
+  getAccessToken(): string {
+    return this.oAuthService.getAccessToken();
+  }
+
+  getAccessTokenAndKeys() {
+    return {
+      accessToken: this.oAuthService.getAccessToken(),
+      keys: this.oAuthService.jwks,
+    };
+  }
+
   private checkToken() {
     return (
       this.oAuthService.hasValidIdToken() &&
       this.oAuthService.hasValidAccessToken()
     );
-  }
-
-  getAccessToken(): string {
-    return this.oAuthService.getAccessToken();
   }
 }

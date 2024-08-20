@@ -1,0 +1,13 @@
+@if (oidcSecurityService.authenticated().isAuthenticated) {
+  @if (oidcSecurityService.userData().userData; as userData) {
+    @for (item of userData | recordIteration; track $index) {
+      <div>
+        <strong>{{ item.key }}:</strong> {{ item.value }}
+      </div>
+    }
+  }
+
+  <button (click)="logout()">Logout</button>
+} @else {
+  <button (click)="login()">Login</button>
+}

@@ -9,9 +9,7 @@ import { provideOAuthClient } from 'angular-oauth2-oidc';
 import { provideHttpClient } from '@angular/common/http';
 import { SsoAuthService } from './sso-auth.service';
 
-export function initializeLogIn(
-  ssoAuthService: SsoAuthService,
-): () => Promise<void> {
+export function initializeLogInFactory(ssoAuthService: SsoAuthService) {
   return () => ssoAuthService.initializeLogIn();
 }
 
@@ -20,10 +18,14 @@ export const appConfig: ApplicationConfig = {
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes),
     provideHttpClient(),
-    provideOAuthClient(),
+    provideOAuthClient({
+      resourceServer: {
+        sendAccessToken: true,
+      },
+    }),
     {
       provide: APP_INITIALIZER,
-      useFactory: initializeLogIn,
+      useFactory: initializeLogInFactory,
       deps: [SsoAuthService],
       multi: true,
     },
