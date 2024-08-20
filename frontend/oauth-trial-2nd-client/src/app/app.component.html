@@ -1,3 +1,4 @@
+<h1>Client 2</h1>
 @if (oidcSecurityService.authenticated().isAuthenticated) {
   @if (oidcSecurityService.userData().userData; as userData) {
     @for (item of userData | recordIteration; track $index) {

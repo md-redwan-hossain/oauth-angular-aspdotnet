@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "oauth-trial-1st-client": {
+    "oauth-trial": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -17,7 +17,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:application",
           "options": {
-            "outputPath": "dist/oauth-trial-1st-client",
+            "outputPath": "dist/oauth-trial",
             "index": "src/index.html",
             "browser": "src/main.ts",
             "polyfills": [
@@ -64,10 +64,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "oauth-trial-1st-client:build:production"
+              "buildTarget": "oauth-trial:build:production"
             },
             "development": {
-              "buildTarget": "oauth-trial-1st-client:build:development"
+              "buildTarget": "oauth-trial:build:development"
             }
           },
           "defaultConfiguration": "development"

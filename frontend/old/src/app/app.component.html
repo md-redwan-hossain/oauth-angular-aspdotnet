@@ -1,0 +1,10 @@
+@if (ssoAuthService.$$userData(); as userData) {
+  @for (item of userData | recordIteration; track $index) {
+    <div>
+      <strong>{{ item.key }}:</strong> {{ item.value }}
+    </div>
+  }
+  <button (click)="ssoAuthService.logout()">Logout</button>
+} @else {
+  <button (click)="ssoAuthService.login()">Login</button>
+}

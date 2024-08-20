@@ -1,10 +1,17 @@
-@if (ssoAuthService.$$userData(); as userData) {
-  @for (item of userData | recordIteration; track $index) {
-    <div>
-      <strong>{{ item.key }}:</strong> {{ item.value }}
-    </div>
+<h1>Client 1</h1>
+@if (oidcSecurityService.authenticated().isAuthenticated) {
+  @if (oidcSecurityService.userData().userData; as userData) {
+    @for (item of userData | recordIteration; track $index) {
+      <div>
+        <strong>{{ item.key }}:</strong> {{ item.value }}
+      </div>
+    }
   }
-  <button (click)="ssoAuthService.logout()">Logout</button>
+  <br>
+  <button (click)="logout()">Logout</button>
+  <br>
+  <br>
+  <button (click)="ping()">Ping</button>
 } @else {
-  <button (click)="ssoAuthService.login()">Login</button>
+  <button (click)="login()">Login</button>
 }

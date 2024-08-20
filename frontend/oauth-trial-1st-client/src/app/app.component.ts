@@ -1,20 +1,43 @@
-import { Component, inject, OnInit } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
-import { AsyncPipe, NgForOf, NgIf } from '@angular/common';
-import { SsoAuthService } from './sso-auth.service';
-import { RecordIterationPipe } from './record-iteration.pipe';
+import {AsyncPipe} from '@angular/common';
+import {Component, DestroyRef, inject, OnInit} from '@angular/core';
+import {RouterOutlet} from '@angular/router';
+import {OidcSecurityService} from 'angular-auth-oidc-client';
+import {RecordIterationPipe} from "./record-iteration.pipe";
+import {takeUntilDestroyed} from "@angular/core/rxjs-interop";
+import {HttpClient} from "@angular/common/http";
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, AsyncPipe, NgIf, NgForOf, RecordIterationPipe],
+  imports: [RouterOutlet, AsyncPipe, RecordIterationPipe],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
 })
 export class AppComponent implements OnInit {
-  readonly ssoAuthService = inject(SsoAuthService);
+  readonly oidcSecurityService = inject(OidcSecurityService);
+  readonly destroyRef = inject(DestroyRef);
+  readonly http = inject(HttpClient);
 
-  ngOnInit() {
-    this.ssoAuthService.refreshUser();
+  ngOnInit(): void {
+    this.oidcSecurityService
+      .checkAuth()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe();
+  }
+
+  ping() {
+    this.http.get("http://localhost:5161/ping", {withCredentials: true})
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe();
+  }
+
+  login(): void {
+    this.oidcSecurityService.authorize();
+  }
+
+  logout(): void {
+    this.oidcSecurityService.logoffAndRevokeTokens()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((result) => console.log(result));
   }
 }
