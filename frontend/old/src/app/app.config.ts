@@ -1,33 +1,36 @@
-import {
-  APP_INITIALIZER,
-  ApplicationConfig,
-  provideZoneChangeDetection,
-} from '@angular/core';
+import { ApplicationConfig, provideZoneChangeDetection } from '@angular/core';
 import { provideRouter } from '@angular/router';
 import { routes } from './app.routes';
-import { provideOAuthClient } from 'angular-oauth2-oidc';
-import { provideHttpClient } from '@angular/common/http';
-import { SsoAuthService } from './sso-auth.service';
-
-export function initializeLogInFactory(ssoAuthService: SsoAuthService) {
-  return () => ssoAuthService.initializeLogIn();
-}
+import {
+  DefaultOAuthInterceptor,
+  provideOAuthClient,
+} from 'angular-oauth2-oidc';
+import {
+  HTTP_INTERCEPTORS,
+  provideHttpClient,
+  withInterceptors,
+  withInterceptorsFromDi,
+} from '@angular/common/http';
+import { corsInterceptor } from './cors.interceptor';
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes),
-    provideHttpClient(),
+    provideHttpClient(
+      withInterceptorsFromDi(),
+      withInterceptors([corsInterceptor]),
+    ),
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: DefaultOAuthInterceptor,
+      multi: true,
+    },
     provideOAuthClient({
       resourceServer: {
         sendAccessToken: true,
+        allowedUrls: ['http://localhost:5161/ping'],
       },
     }),
-    {
-      provide: APP_INITIALIZER,
-      useFactory: initializeLogInFactory,
-      deps: [SsoAuthService],
-      multi: true,
-    },
   ],
 };
