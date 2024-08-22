@@ -6,6 +6,7 @@
   }
   <button (click)="ssoAuthService.logout()">Logout</button>
   <button (click)="ssoAuthService.refreshToken()">Refresh</button>
+  <button (click)="user()">User Details</button>
   <button (click)="ping()">Ping</button>
 } @else {
   <button (click)="ssoAuthService.login()">Login</button>

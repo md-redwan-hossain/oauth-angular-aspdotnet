@@ -18,8 +18,8 @@ export const appConfig: ApplicationConfig = {
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes),
     provideHttpClient(
-      withInterceptorsFromDi(),
       withInterceptors([corsInterceptor]),
+      withInterceptorsFromDi(),
     ),
     {
       provide: HTTP_INTERCEPTORS,
@@ -29,7 +29,10 @@ export const appConfig: ApplicationConfig = {
     provideOAuthClient({
       resourceServer: {
         sendAccessToken: true,
-        allowedUrls: ['http://localhost:5161/ping'],
+        allowedUrls: [
+          'http://localhost:5161/ping',
+          'http://localhost:8085/realms/mtsl/account',
+        ],
       },
     }),
   ],

@@ -34,6 +34,10 @@ export class SsoAuthService {
     this.oAuthService.initCodeFlow();
   }
 
+  async userDetails() {
+    return await this.oAuthService.loadUserProfile();
+  }
+
   async refreshToken() {
     await this.oAuthService.refreshToken();
   }

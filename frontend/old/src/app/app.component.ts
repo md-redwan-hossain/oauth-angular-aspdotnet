@@ -5,6 +5,7 @@ import { SsoAuthService } from './sso-auth.service';
 import { RecordIterationPipe } from './record-iteration.pipe';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { HttpClient } from '@angular/common/http';
+import { firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-root',
@@ -25,10 +26,13 @@ export class AppComponent implements OnInit {
       .subscribe();
   }
 
-  ping() {
-    this.http
-      .get('http://localhost:5161/ping', { withCredentials: true })
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe();
+  async user() {
+    console.log(
+      await firstValueFrom(this.http.get('http://localhost:8085/realms/mtsl/account')),
+    );
+  }
+
+  async ping() {
+    await firstValueFrom(this.http.get('http://localhost:5161/ping'));
   }
 }
