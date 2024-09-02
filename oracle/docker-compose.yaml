@@ -1,0 +1,22 @@
+services:
+  keycloak:
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    command: start
+    environment:
+      KC_HTTP_ENABLED: true
+      KC_HEALTH_ENABLED: true
+      KEYCLOAK_ADMIN: ${KEYCLOAK_ADMIN}
+      KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD}
+      KC_DB: oracle
+      KC_DB_SCHEMA: KEYCLOAK
+      KC_HOSTNAME: localhost
+      KC_DB_URL_HOST: "118.67.213.105"
+      KC_DB_URL_PORT: 1521
+      KC_DB_URL_DATABASE: ${DB_NAME}
+      KC_DB_USERNAME: ${DB_USER}
+      KC_DB_PASSWORD: ${DB_PASSWORD}
+    ports:
+      - 8086:8080
+    restart: unless-stopped

@@ -1,0 +1,23 @@
+services:
+  keycloak:
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    environment:
+      KC_HTTP_ENABLED: true
+      KEYCLOAK_ENABLE_HEALTH_ENDPOINTS: true
+      KEYCLOAK_ENABLE_STATISTICS: true
+      KEYCLOAK_CREATE_ADMIN_USER: true
+      KEYCLOAK_ADMIN: ${KEYCLOAK_ADMIN}
+      KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD}
+      KEYCLOAK_JDBC_DRIVER: oracle
+      KEYCLOAK_DATABASE_VENDOR: oracle
+      KEYCLOAK_DATABASE_HOST: "118.67.213.105"
+      KEYCLOAK_DATABASE_PORT: 1521
+      KEYCLOAK_DATABASE_SCHEMA: keycloak
+      KEYCLOAK_DATABASE_NAME: ${DB_NAME}
+      KEYCLOAK_DATABASE_USER: ${DB_USER}
+      KEYCLOAK_DATABASE_PASSWORD: ${DB_PASSWORD}
+    ports:
+      - 8086:8080
+    restart: unless-stopped

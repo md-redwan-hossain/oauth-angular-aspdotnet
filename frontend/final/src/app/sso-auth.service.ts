@@ -2,7 +2,7 @@ import { DestroyRef, inject, Injectable, OnInit, signal } from '@angular/core';
 import { OAuthService, OAuthSuccessEvent } from 'angular-oauth2-oidc';
 import { authConfig } from './auth.config';
 import { fromPromise } from 'rxjs/internal/observable/innerFrom';
-import { Observable } from 'rxjs';
+import { from, Observable, of, pipe, switchMap } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Injectable({
@@ -26,8 +26,16 @@ export class SsoAuthService {
 
   initialize(): Observable<boolean> {
     this.oAuthService.configure(authConfig);
-    this.oAuthService.setupAutomaticSilentRefresh();
-    return fromPromise(this.oAuthService.loadDiscoveryDocumentAndTryLogin());
+
+    return from(this.oAuthService.loadDiscoveryDocumentAndTryLogin()).pipe(
+      switchMap((val) => {
+        if (val) {
+          this.oAuthService.setupAutomaticSilentRefresh();
+          return of(true);
+        }
+        return of(false);
+      }),
+    );
   }
 
   login() {

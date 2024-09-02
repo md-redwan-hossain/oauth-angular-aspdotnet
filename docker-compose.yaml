@@ -1,5 +1,5 @@
 services:
-    postgres_db:
+    postgres_db_kc:
         image: bitnami/postgresql:16.3.0
         restart: unless-stopped
         environment:
@@ -18,13 +18,13 @@ services:
         ports:
             - "5436:5432"
         volumes:
-            - "postgres_data:/bitnami/postgresql"
+            - "kc_postgres_data:/bitnami/postgresql"
 
-    keycloak:
+    keycloak_pg:
         depends_on:
-            postgres_db:
+            postgres_db_kc:
                 condition: service_healthy
-        image: quay.io/keycloak/keycloak:25.0.2
+        image: quay.io/keycloak/keycloak:25.0.4
         command: start
         environment:
             KC_HOSTNAME: localhost
@@ -33,7 +33,7 @@ services:
             KEYCLOAK_ADMIN: ${KEYCLOAK_ADMIN}
             KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD}
             KC_DB: postgres
-            KC_DB_URL_HOST: postgres_db
+            KC_DB_URL_HOST: postgres_db_kc
             KC_DB_URL_PORT: 5432
             KC_DB_URL_DATABASE: ${DB_NAME}
             KC_DB_USERNAME: ${DB_USER}
@@ -42,4 +42,4 @@ services:
             - 8085:8080
         restart: unless-stopped
 volumes:
-    postgres_data:
+    kc_postgres_data:

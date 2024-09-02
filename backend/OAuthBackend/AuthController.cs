@@ -7,7 +7,7 @@ namespace OAuthBackend;
 public class AuthController : ControllerBase
 {
     [HttpGet("ping")]
-    [Authorize]
+    [Authorize(Roles = "read_data")]
     public IActionResult Ping()
     {
         return Ok("works");

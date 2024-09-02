@@ -1,0 +1,6 @@
+FROM bitnami/keycloak:25.0.4
+ADD --chown=keycloak:keycloak --chmod=644 https://repo1.maven.org/maven2/com/oracle/database/jdbc/ojdbc11/23.3.0.23.09/ojdbc11-23.3.0.23.09.jar /opt/bitnami/keycloak/providers/ojdbc11.jar
+ADD --chown=keycloak:keycloak --chmod=644 https://repo1.maven.org/maven2/com/oracle/database/nls/orai18n/23.3.0.23.09/orai18n-23.3.0.23.09.jar /opt/bitnami/keycloak/providers/orai18n.jar
+ENV KEYCLOAK_JDBC_DRIVER=oracle
+ENV KEYCLOAK_DATABASE_VENDOR=oracle
+RUN /opt/bitnami/keycloak/bin/kc.sh build
